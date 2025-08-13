@@ -31,7 +31,7 @@ import repository.SizeRepository;
 
 /**
  *
- * @author ADMIN
+ * @author Os
  */
 public class ViewSanPham extends javax.swing.JPanel {
     DefaultTableModel dtm ;

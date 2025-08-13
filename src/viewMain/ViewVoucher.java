@@ -25,6 +25,7 @@ public class ViewVoucher extends javax.swing.JPanel {
         initComponents();
         dtm = (DefaultTableModel) this.tblVoucher.getModel();
         voucherRepository = new VoucherRepository();
+        voucherRepository.expireOutdated();
         this.fillTable(voucherRepository.getAll());
     }
 
@@ -229,7 +230,7 @@ public class ViewVoucher extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
@@ -237,8 +238,8 @@ public class ViewVoucher extends javax.swing.JPanel {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(9, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -291,7 +292,7 @@ public class ViewVoucher extends javax.swing.JPanel {
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(86, 86, 86))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -304,12 +305,16 @@ public class ViewVoucher extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLamMoiActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-       voucherRepository.add(this.getForm());
+       Voucher form = this.getForm();
+       if (!validateDateRange(form)) return;
+       voucherRepository.add(form);
        this.fillTable(voucherRepository.getAll());
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        voucherRepository.update(this.getForm());
+        Voucher form = this.getForm();
+        if (!validateDateRange(form)) return;
+        voucherRepository.update(form);
         this.fillTable(voucherRepository.getAll());
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -371,6 +376,20 @@ public class ViewVoucher extends javax.swing.JPanel {
         String dieuKien = this.txtDieuKien.getText();
         Integer trangThai = this.rdoHoatDong.isSelected() == true ? 1 : 0;
         return new Voucher(id, ten, phanTramGiam, dieuKien, ngayBatDau, ngayKetThuc, trangThai) ;
+    }
+    
+    private boolean validateDateRange(Voucher vc){
+        Date start = vc.getNgayBatBau();
+        Date end = vc.getNgayKetThuc();
+        if (start == null || end == null){
+            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng chọn Ngày bắt đầu và Ngày kết thúc");
+            return false;
+        }
+        if (end.before(start)){
+            javax.swing.JOptionPane.showMessageDialog(this, "Ngày kết thúc không được trước Ngày bắt đầu");
+            return false;
+        }
+        return true;
     }
     
     

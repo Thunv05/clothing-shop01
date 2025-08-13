@@ -18,6 +18,39 @@ public class HoaDonRepository {
         conn = DbConect.getConnection();
     }
     
+    public ArrayList<HoaDon> TimKiem(String ma){
+        ArrayList<HoaDon> listHoaDon = new ArrayList<>();
+        String sql = """
+                     select hd.Id, hd.MaHD, nv.Ten, kh.TenKhachHang, hd.NgayTao, hd.TongTien, vc.Ten, hd.TrangThai from HoaDon hd
+                     inner join NhanVien nv on nv.Id = hd.IdNhanVien
+                     inner join KhachHang kh on kh.Id = hd.IdKhachHang
+                     inner join Voucher vc on vc.Id = hd.IdVoucher
+                     where hd.MaHD = ?
+                     """;
+        try {
+            PreparedStatement ps = conn.prepareCall(sql);
+            ps.setString(1, ma);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                listHoaDon.add(new HoaDon(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getFloat(6),
+                        rs.getString(7),
+                        rs.getInt(8)
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return  listHoaDon;
+    }
+    
     public ArrayList<HoaDon> getAll(){
         ArrayList<HoaDon> listHoaDon = new ArrayList<>();
         String sql = """

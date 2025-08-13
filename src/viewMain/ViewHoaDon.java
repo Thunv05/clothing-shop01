@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import model.HoaDon;
 import model.KhachHang;
+import model.SanPham;
 import repository.HoaDonRepository;
+import repository.SanPhamRepository;
 
 /**
  *
@@ -58,7 +60,18 @@ public class ViewHoaDon extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, java.awt.Color.black, java.awt.Color.black));
 
+        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField6ActionPerformed(evt);
+            }
+        });
+
         jButton4.setText("Tìm kiếm ");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         tblHoaDon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -180,6 +193,30 @@ public class ViewHoaDon extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        HoaDonRepository repo = new HoaDonRepository();
+        DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
+         dtm.setRowCount(0);
+         ArrayList <HoaDon> list = repo.TimKiem(jTextField6.getText());
+        for (HoaDon hd : list) {
+            dtm.addRow(new Object[]{
+                hd.getId(),
+                hd.getMaHoaDon(),
+                hd.getIdNhanVien(), 
+                hd.getIdKhachHang(), 
+                hd.getNgayTao(),
+                hd.getTongTien(), 
+                hd.getIdVoucher(),
+                hd.getTrangThai() == 1 ? "Đã thanh toán " : " Chưa thanh toán"
+            });
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6ActionPerformed
 
     public void fillTable(ArrayList<HoaDon> listHoaDon){
         int row = this.tblHoaDon.getSelectedRow();

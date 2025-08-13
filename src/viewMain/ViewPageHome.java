@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 /**
  *
- * @author ADMIN
+ * @author Os
  */
 public class ViewPageHome extends javax.swing.JFrame {
      CardLayout cardLayout;

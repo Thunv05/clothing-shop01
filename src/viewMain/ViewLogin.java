@@ -9,7 +9,7 @@ import repository.TaiKhoanRepository;
 
 /**
  *
- * @author ADMIN
+ * @author Os
  */
 public class ViewLogin extends javax.swing.JFrame {
     TaiKhoanRepository taiKhoanRepository ;

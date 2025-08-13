@@ -82,6 +82,35 @@ public class SanPhamRepository {
         return listSanPham;
     }
     
+    public ArrayList<SanPham> getAllTheoNgay(){
+        ArrayList<SanPham> listSanPham = new ArrayList<>();
+        String sql = """
+                     Select sp.Id, sp.TenSp, sp.MaSP, SUM( hdct.SoLuong ) AS TongSoLuong 
+                                                               from HoaDonChiTiet hdct
+                                                               inner join HoaDon hd on hdct.IdHoaDon = hd.Id
+                                                             
+                                          					 inner join SanPham sp on sp.Id = hdct.IdSanPham
+                                                               where CONVERT (DATE, hd.NgayTao) = CONVERT (DATE, GETDATE ())
+                                          					 group by sp.Id, sp.TenSp, sp.MaSP  
+                     """;
+        try {
+            PreparedStatement ps = conn.prepareCall(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                listSanPham.add(new SanPham(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4)
+                        
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listSanPham;
+    }
+    
     public void add(SanPham sp){
         String sql = """
                      Insert into SanPham(TenSp, MaSP, MoTa, IdChatLieu, IdKieuDang, IdSize, IdMauSac, IdNhaCungCap, GiaBan, GiaNhap, SoLuong, TrangThai)
